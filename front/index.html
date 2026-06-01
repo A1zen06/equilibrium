@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQUILIBRIUM | Клубные апартаменты</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">EQUILIBRIUM</a>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link active">Главная</a>
+                <a href="html/login.html" class="nav-link" id="main-cabinet-link">Личный кабинет</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        
+        <section class="hero-section">
+            <span class="subtitle">Интеллектуальный подбор жилья</span>
+            <h1 class="main-title">Исключительные пространства <br>для вашей жизни</h1>
+            
+            <div class="search-panel">
+                <form id="main-search-form" class="search-form">
+                    <div class="search-group">
+                        <label>Локация</label>
+                        <input type="text" id="search-location" placeholder="Город или район" class="search-input">
+                    </div>
+                    <div class="search-group">
+                        <label>Заезд</label>
+                        <input type="date" id="search-start" class="search-input">
+                    </div>
+                    <div class="search-group">
+                        <label>Выезд</label>
+                        <input type="date" id="search-end" class="search-input">
+                    </div>
+                    <div class="search-group">
+                        <label>Гости</label>
+                        <input type="number" id="search-guests" min="1" max="10" value="2" class="search-input">
+                    </div>
+                    <button type="submit" class="btn-gold search-btn">Найти</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="home-section">
+            <h2 class="section-title">Категории объектов</h2>
+            <div class="categories-grid">
+                <div class="category-card">
+                    <h3 class="category-title">Апартаменты</h3>
+                    <p class="category-desc">Панорамные виды и сервис</p>
+                </div>
+                <div class="category-card">
+                    <h3 class="category-title">Квартиры</h3>
+                    <p class="category-desc">Комфорт в центре мегаполиса</p>
+                </div>
+                <div class="category-card">
+                    <h3 class="category-title">Дома и Виллы</h3>
+                    <p class="category-desc">Приватность и свобода</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="home-section">
+            <h2 class="section-title">Каталог и результаты</h2>
+            <div class="catalog-grid" id="properties-container">
+                <div class="loading-placeholder">Синхронизация с сервером базы данных...</div>
+            </div>
+        </section>
+
+        <section class="home-section info-section">
+            <h2 class="section-title">Стандарты EQUILIBRIUM</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-card-icon">✦</div>
+                    <div class="info-card-title">Мгновенное подтверждение</div>
+                    <div class="info-card-text">Бронирование фиксируется в базе данных моментально. Никаких ожиданий ответа от владельца.</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon">✦</div>
+                    <div class="info-card-title">Гарантия возврата залога</div>
+                    <div class="info-card-text">Безопасные сделки. Залог замораживается на счету и автоматически возвращается после выезда.</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon">✦</div>
+                    <div class="info-card-title">Поддержка 24/7</div>
+                    <div class="info-card-text">Персональный менеджер и круглосуточная поддержка на всех этапах проживания.</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="premium-footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <div class="footer-logo">EQUILIBRIUM</div>
+                <div class="footer-copy">© 2026 Информационная Система управления арендой. Все права защищены.</div>
+            </div>
+            <div class="footer-right">
+                <div>
+                    <div class="footer-col-title">Система</div>
+                    <a href="index.html" class="footer-link">Каталог жилья</a>
+                    <a href="html/login.html" class="footer-link">Личный кабинет</a>
+                </div>
+                <div>
+                    <div class="footer-col-title">Документы</div>
+                    <a href="/api-docs" class="footer-link" target="_blank">Swagger API</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/catalog.js"></script>
+</body>
+</html>

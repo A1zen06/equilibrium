@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQUILIBRIUM | Личный кабинет</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .chat-message { padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; max-width: 80%; line-height: 1.4; font-size: 14px; }
+        .chat-message.sent { background-color: var(--accent-gold); color: black; margin-left: auto; border-bottom-right-radius: 0; }
+        .chat-message.received { background-color: var(--bg-input); color: var(--text-primary); margin-right: auto; border-bottom-left-radius: 0; border: 1px solid var(--border-color); }
+        .chat-message.auto { border: 1px solid var(--accent-gold); background-color: rgba(212, 175, 55, 0.1); }
+        .auto-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-gold); display: block; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">EQUILIBRIUM</a>
+            <nav class="nav-menu">
+                <a href="../index.html" class="nav-link">Главная</a>
+                <a href="login.html" class="nav-link active" id="nav-cabinet-link">Личный кабинет</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- БЛОК АВТОРИЗАЦИИ -->
+        <div class="auth-wrapper" id="auth-form-block">
+            <div class="property-premium-card" style="padding: 30px;">
+                <div style="display: flex; gap: 20px; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                    <span id="tab-login" style="cursor:pointer; color: var(--text-primary); font-weight:600;">ВХОД</span>
+                    <span id="tab-register" style="cursor:pointer; color: var(--text-secondary);">РЕГИСТРАЦИЯ</span>
+                </div>
+                
+                <form id="login-form">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="login-email" class="form-input" required placeholder="owner@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Пароль</label>
+                        <input type="password" id="login-password" class="form-input" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn-gold">Войти в систему</button>
+                </form>
+
+                <form id="register-form" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Ваше Имя</label>
+                        <input type="text" id="reg-name" class="form-input" required placeholder="Имя">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="reg-email" class="form-input" required placeholder="user@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Пароль</label>
+                        <input type="password" id="reg-password" class="form-input" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn-gold">Создать аккаунт</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ЛИЧНЫЙ КАБИНЕТ -->
+        <div id="cabinet-dashboard" class="property-premium-card" style="display: none; padding: 40px;">
+            <h2 id="welcome-title" style="margin-bottom: 10px; font-weight: 300;">Добро пожаловать</h2>
+            <p id="cabinet-email-info" style="color: var(--text-secondary); margin-bottom: 30px;"></p>
+
+            <!-- ДЛЯ ОБЫЧНОГО ПОЛЬЗОВАТЕЛЯ -->
+            <div id="user-only-zone" style="display: none;">
+                <div class="user-dashboard-tabs">
+                    <div id="tab-my-bookings" class="user-tab active">История бронирований</div>
+                    <div id="tab-my-favorites" class="user-tab">Сохраненные объекты</div>
+                </div>
+
+                <div id="bookings-container">
+                    <div style="padding: 40px 20px; border: 1px dashed var(--border-color); border-radius: 8px; text-align: center;">
+                        <p style="color: var(--text-secondary); font-size: 15px;">Загрузка данных...</p>
+                    </div>
+                </div>
+
+                <div id="favorites-container" style="display: none;">
+                    <div style="padding: 40px 20px; border: 1px dashed var(--border-color); border-radius: 8px; text-align: center;">
+                        <p style="color: var(--text-secondary); font-size: 15px;">Загрузка данных...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ДЛЯ ВЛАДЕЛЬЦА -->
+            <div id="owner-only-zone" style="display: none;">
+                
+                <div id="owner-dashboard" style="margin-bottom: 50px;">
+                    <h3 style="color: var(--accent-gold); margin-bottom: 20px; font-weight: 400; text-transform: uppercase;">Аналитика показателей</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-revenue">0 ₽</div>
+                            <div class="stat-label">Общая выручка</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-clients">0</div>
+                            <div class="stat-label">Уникальных клиентов</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-occupancy">0%</div>
+                            <div class="stat-label">Заполняемость сегодня</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="owner-bookings-section" style="margin-bottom: 50px;">
+                    <h3 style="color: var(--accent-gold); margin-bottom: 20px; font-weight: 400; text-transform: uppercase;">Входящие заявки</h3>
+                    <div id="owner-bookings-list">
+                        <div class="loading-placeholder">Синхронизация заявок...</div>
+                    </div>
+                </div>
+
+                <!-- НАСТРОЙКИ АВТОМАТИЗАЦИИ -->
+                <div id="owner-automation-section" style="margin-bottom: 50px;">
+                    <h3 style="color: var(--accent-gold); margin-bottom: 20px; font-weight: 400; text-transform: uppercase;">Автоматизация общения</h3>
+                    <form id="automation-settings-form" style="max-width: 600px;">
+                        <div class="form-group">
+                            <label class="form-label">При подтверждении брони</label>
+                            <textarea id="tpl-after-booking" class="form-input" rows="3" placeholder="Спасибо за бронирование! Ожидаем вас..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">За день до заезда</label>
+                            <textarea id="tpl-before-checkin" class="form-input" rows="3" placeholder="Напоминаем о вашем заезде завтра. Код от домофона: 1234..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">После выезда</label>
+                            <textarea id="tpl-after-checkout" class="form-input" rows="3" placeholder="Спасибо, что выбрали нас! Будем рады вашему отзыву..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-gold" style="width: auto; padding: 10px 30px;">Сохранить шаблоны</button>
+                    </form>
+                </div>
+
+                <!-- МОДЕРАЦИЯ ОТЗЫВОВ -->
+                <div id="owner-reviews-section" style="margin-bottom: 50px;">
+                    <h3 style="color: var(--accent-gold); margin-bottom: 20px; font-weight: 400; text-transform: uppercase;">Модерация отзывов</h3>
+                    <div id="owner-reviews-list">
+                        <div class="loading-placeholder">Проверка новых отзывов...</div>
+                    </div>
+                </div>
+
+                <!-- ДОБАВЛЕНИЕ ОБЪЕКТА -->
+                <h3 style="color: var(--accent-gold); margin-bottom: 20px; font-weight: 400; text-transform: uppercase;">Добавление объекта</h3>
+                <form id="add-property-form" enctype="multipart/form-data" style="max-width: 600px; margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Название апартаментов</label>
+                        <input type="text" id="prop-title" class="form-input" required placeholder="Premium Gold Loft">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Категория</label>
+                        <select id="prop-category" class="form-input">
+                            <option value="Апартаменты">Апартаменты</option>
+                            <option value="Квартира">Квартира</option>
+                            <option value="Дом">Дом</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Описание пространства</label>
+                        <textarea id="prop-desc" class="form-input" rows="4" placeholder="Детальное описание интерьера, мебели и техники..." style="resize: vertical;"></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 20px; margin-bottom: 25px;">
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label class="form-label">Комнат</label>
+                            <input type="number" id="prop-rooms" class="form-input" required min="1" value="1">
+                        </div>
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label class="form-label">Макс. гостей</label>
+                            <input type="number" id="prop-guests" class="form-input" required min="1" value="2">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 20px; margin-bottom: 25px;">
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label class="form-label">Удаленность от метро</label>
+                            <input type="text" id="prop-metro" class="form-input" placeholder="Напр.: 5 мин. пешком">
+                        </div>
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label class="form-label">Сумма залога (₽)</label>
+                            <input type="number" id="prop-deposit" class="form-input" value="0" min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Удобства (через запятую)</label>
+                        <input type="text" id="prop-amenities" class="form-input" placeholder="Wi-Fi, Кондиционер, Стиральная машина">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Правила проживания</label>
+                        <textarea id="prop-rules" class="form-input" rows="2" placeholder="Например: Без животных, курение запрещено" style="resize: vertical;"></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 20px; margin-bottom: 25px;">
+                        <div class="form-group" style="flex: 2; margin-bottom: 0;">
+                            <label class="form-label">Физический адрес</label>
+                            <input type="text" id="prop-address" class="form-input" required placeholder="ул. Пушкина, д. 12">
+                        </div>
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label class="form-label">Цена за сутки (₽)</label>
+                            <input type="number" id="prop-price" class="form-input" required placeholder="5000">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="padding: 20px; border: 1px dashed var(--border-color); border-radius: 8px; background-color: rgba(255,255,255,0.02);">
+                        <label class="form-label" style="color: var(--accent-gold);">Загрузить файл изображения (PNG/JPG)</label>
+                        <input type="file" id="prop-file" accept="image/png, image/jpeg, image/jpg" style="color: var(--text-secondary); margin-bottom: 15px; display: block;">
+                        
+                        <label class="form-label">Или вставьте интернет-ссылку на фото</label>
+                        <input type="url" id="prop-image" class="form-input" placeholder="https://example.com/room.jpg">
+                    </div>
+                    
+                    <button type="submit" class="btn-gold" style="width: auto; padding: 12px 40px;">Разместить в каталоге</button>
+                </form>
+            </div>
+
+            <button id="logout-btn" class="btn-primary" style="background: #ff4a4a; color: white; width: auto; margin-top: 30px; padding: 10px 25px;">Выйти из аккаунта</button>
+        </div>
+
+        <!-- МОДАЛЬНОЕ ОКНО ЧАТА -->
+        <div id="chat-modal" class="modal">
+            <div class="modal-content" style="max-width: 600px; height: 80vh; display: flex; flex-direction: column;">
+                <span class="modal-close" onclick="window.closeChatModal()">&times;</span>
+                <h3 style="color: var(--accent-gold); margin-bottom: 20px; font-weight: 400; text-transform: uppercase;">Чат по бронированию</h3>
+                
+                <div id="chat-messages-container" style="flex: 1; overflow-y: auto; padding-right: 10px; margin-bottom: 20px; display: flex; flex-direction: column;">
+                    <!-- Сообщения будут тут -->
+                </div>
+
+                <form id="chat-send-form" style="display: flex; gap: 10px;">
+                    <input type="hidden" id="chat-booking-id">
+                    <input type="hidden" id="chat-receiver-id">
+                    <input type="text" id="chat-input-text" class="form-input" placeholder="Введите сообщение..." required style="margin-bottom: 0; flex: 1;">
+                    <button type="submit" class="btn-gold" style="width: auto; padding: 0 20px;">Отправить</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- МОДАЛЬНОЕ ОКНО ДЛЯ НАПИСАНИЯ ОТЗЫВА -->
+        <div id="review-modal" class="modal">
+            <div class="modal-content" style="max-width: 600px;">
+                <span class="modal-close" onclick="window.closeReviewModal()">&times;</span>
+                <h3 style="color: var(--accent-gold); margin-bottom: 20px; font-weight: 400; text-transform: uppercase;">Оцените проживание</h3>
+                <form id="modal-review-form">
+                    <input type="hidden" id="modal-review-prop-id">
+                    <select id="modal-review-rating" class="form-input" style="margin-bottom: 20px;" required>
+                        <option value="" disabled selected>Выберите оценку...</option>
+                        <option value="5">✦ ✦ ✦ ✦ ✦ (Идеально)</option>
+                        <option value="4">✦ ✦ ✦ ✦ (Отлично)</option>
+                        <option value="3">✦ ✦ ✦ (Хорошо)</option>
+                        <option value="2">✦ ✦ (Удовлетворительно)</option>
+                        <option value="1">✦ (Неприемлемо)</option>
+                    </select>
+                    <div class="form-group">
+                        <textarea id="modal-review-comment" class="form-input" rows="5" placeholder="Поделитесь впечатлениями..." required style="resize: vertical;"></textarea>
+                    </div>
+                    <button type="submit" class="btn-gold">Отправить на модерацию</button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="premium-footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <div class="footer-logo">EQUILIBRIUM</div>
+                <div class="footer-copy">© 2026 Информационная Система управления арендой. Все права защищены.</div>
+            </div>
+            <div class="footer-right">
+                <div>
+                    <div class="footer-col-title">Система</div>
+                    <a href="../index.html" class="footer-link">Главная</a>
+                    <a href="login.html" class="footer-link">Личный кабинет</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQUILIBRIUM | Детали апартаментов</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">EQUILIBRIUM</a>
+            <nav class="nav-menu">
+                <a href="../index.html" class="nav-link">Главная</a>
+                <a href="login.html" class="nav-link" id="nav-cabinet-link">Личный кабинет</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div id="property-details-wrapper" style="display: none; animation: fadeInUp 0.6s ease-out forwards;">
+            
+            <div style="margin-bottom: 30px;">
+                <h1 id="prop-detail-title" style="font-weight: 300; font-size: 36px; letter-spacing: 1px; margin-bottom: 10px;">Загрузка названия...</h1>
+                <p id="prop-detail-address" style="color: var(--text-secondary); font-size: 16px;"></p>
+            </div>
+
+            <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+                
+                <div style="flex: 2; min-width: 300px;">
+                    <div id="prop-detail-image-box" style="width: 100%; height: 450px; border-radius: var(--radius-premium); overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 30px;">
+                        <img id="prop-detail-img" src="" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+
+                    <div class="card-premium" style="padding: 30px;">
+                        <h3 style="color: var(--accent-gold); font-weight: 400; margin-bottom: 15px; text-transform: uppercase; font-size: 16px; letter-spacing: 1px;">Описание пространства</h3>
+                        <p id="prop-detail-desc" style="color: var(--text-secondary); font-size: 15px; line-height: 1.7; white-space: pre-line;">Описание апартаментов...</p>
+                    </div>
+
+                    <div class="card-premium" style="padding: 30px;">
+                        <h3 style="color: var(--accent-gold); font-weight: 400; margin-bottom: 15px; text-transform: uppercase; font-size: 16px; letter-spacing: 1px;">Характеристики и Удобства</h3>
+                        <div id="prop-detail-specs" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; font-size: 14px; color: var(--text-secondary);">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="flex: 1; min-width: 300px; height: fit-content; position: sticky; top: 120px;">
+                    <div class="card-premium" style="padding: 30px; border: 1px solid var(--border-color);">
+                        <div style="margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+                            <span style="color: var(--text-secondary); font-size: 14px;">Цена за сутки</span>
+                            <h2 id="prop-detail-price" style="color: var(--accent-gold); font-weight: 600; font-size: 28px; margin-top: 5px;">0 ₽</h2>
+                        </div>
+
+                        <form id="detail-booking-form">
+                            <div class="form-group">
+                                <label class="form-label">Дата заезда</label>
+                                <input type="date" id="detail-start-date" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Дата выезда</label>
+                                <input type="date" id="detail-end-date" class="form-input" required>
+                            </div>
+
+                            <div class="price-summary" style="margin: 20px 0; background-color: var(--bg-input);">
+                                <span style="font-size: 14px; color: var(--text-secondary);">Итоговый расчет:</span>
+                                <strong id="detail-total-calc" style="font-size: 18px; color: var(--text-primary);">0 ₽</strong>
+                            </div>
+
+                            <button type="submit" class="btn-gold" style="font-size: 13px;">Забронировать сейчас</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div> 
+
+            <section class="reviews-section">
+                <h3 style="font-weight: 300; font-size: 24px; letter-spacing: 1px; text-transform: uppercase; border-left: 3px solid var(--accent-gold); padding-left: 15px;">Отзывы резидентов</h3>
+                <div id="reviews-container" class="reviews-grid">
+                    </div>
+            </section>
+
+        </div>
+
+        <div id="property-error-placeholder" class="loading-placeholder" style="display: none; color: #ff4a4a;">
+            Апартаменты не найдены или сервер бэкенда недоступен.
+        </div>
+    </main>
+
+    <footer class="premium-footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <div class="footer-logo">EQUILIBRIUM</div>
+                <div class="footer-copy">© 2026 Информационная Система управления арендой. Все права защищены.</div>
+            </div>
+            <div class="footer-right">
+                <div>
+                    <div class="footer-col-title">Система</div>
+                    <a href="../index.html" class="footer-link">Каталог жилья</a>
+                    <a href="login.html" class="footer-link">Личный кабинет</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/property.js"></script>
+</body>
+</html>
