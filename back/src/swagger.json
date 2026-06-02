@@ -1,0 +1,270 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Equilibrium Rental System API",
+    "version": "1.0.0",
+    "description": "Полная документация API для платформы краткосрочной аренды недвижимости"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Локальный сервер разработки"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    { "name": "Auth", "description": "Авторизация и регистрация пользователей" },
+    { "name": "Properties", "description": "Каталог недвижимости (CRUD)" },
+    { "name": "Bookings", "description": "Управление заявками на бронирование" },
+    { "name": "Messages", "description": "Внутренний чат между пользователями" }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "summary": "Регистрация нового пользователя",
+        "tags": ["Auth"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Иван Иванов" },
+                  "email": { "type": "string", "example": "ivan@mail.com" },
+                  "password": { "type": "string", "example": "secret123" },
+                  "role": { "type": "string", "example": "CLIENT", "description": "CLIENT или OWNER" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Пользователь успешно создан" },
+          "400": { "description": "Ошибка валидации данных" }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Авторизация в системе",
+        "tags": ["Auth"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "ivan@mail.com" },
+                  "password": { "type": "string", "example": "secret123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Успешный вход, возврат токена" },
+          "401": { "description": "Неверные учетные данные" }
+        }
+      }
+    },
+    "/api/properties": {
+      "get": {
+        "summary": "Получить каталог объектов недвижимости",
+        "tags": ["Properties"],
+        "security": [],
+        "responses": {
+          "200": { "description": "Список апартаментов успешно загружен" }
+        }
+      },
+      "post": {
+        "summary": "Добавить новый объект (Только OWNER)",
+        "tags": ["Properties"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string", "example": "Панорамный лофт в центре" },
+                  "description": { "type": "string", "example": "Уютная квартира с отличным видом." },
+                  "pricePerNight": { "type": "number", "example": 5000 },
+                  "location": { "type": "string", "example": "Москва, Арбат 10" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Объект успешно создан" },
+          "403": { "description": "Нет прав доступа" }
+        }
+      }
+    },
+    "/api/properties/{id}": {
+      "put": {
+        "summary": "Редактировать параметры и цену объекта",
+        "tags": ["Properties"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID объекта недвижимости"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pricePerNight": { "type": "number", "example": 5500 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Данные успешно обновлены" }
+        }
+      },
+      "delete": {
+        "summary": "Физическое удаление объекта из базы данных",
+        "tags": ["Properties"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID объекта недвижимости"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Объект удален" }
+        }
+      }
+    },
+    "/api/bookings": {
+      "post": {
+        "summary": "Отправка заявки на аренду (Статус PENDING)",
+        "tags": ["Bookings"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "propertyId": { "type": "integer", "example": 1 },
+                  "startDate": { "type": "string", "format": "date", "example": "2026-06-15" },
+                  "endDate": { "type": "string", "format": "date", "example": "2026-06-20" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Заявка успешно создана" }
+        }
+      },
+      "get": {
+        "summary": "Просмотр списка своих бронирований",
+        "tags": ["Bookings"],
+        "responses": {
+          "200": { "description": "Список бронирований получен" }
+        }
+      }
+    },
+    "/api/bookings/{id}/status": {
+      "patch": {
+        "summary": "Изменение статуса заявки (CONFIRMED / CANCELLED)",
+        "tags": ["Bookings"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID заявки"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "string", "example": "CONFIRMED" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Статус успешно обновлен" }
+        }
+      }
+    },
+    "/api/messages": {
+      "post": {
+        "summary": "Отправка мгновенного сообщения во внутреннем чате",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "receiverId": { "type": "integer", "example": 2 },
+                  "content": { "type": "string", "example": "Здравствуйте, хотел бы уточнить детали заселения." }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Сообщение отправлено" }
+        }
+      },
+      "get": {
+        "summary": "Получить историю сообщений с конкретным пользователем",
+        "tags": ["Messages"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "userId",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID собеседника"
+          }
+        ],
+        "responses": {
+          "200": { "description": "История диалога получена" }
+        }
+      }
+    }
+  }
+}
