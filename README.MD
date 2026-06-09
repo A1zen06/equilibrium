@@ -1,51 +1,32 @@
-Markdown
 # Equilibrium Rental System
 
 ## 🚀 Описание проекта
+<br>
 **Equilibrium Rental System** — это платформа для управления краткосрочной арендой недвижимости. Система позволяет владельцам эффективно публиковать объекты и управлять бронированиями, а пользователям — удобно находить жилье и оформлять заявки.
 
 ## 🛠 Технологический стек
-| Слой | Технология |
-| :--- | :--- |
-| **Frontend** | HTML5, CSS3, Vanilla JS |
-| **Backend** | Node.js, Express.js |
-| **Database** | PostgreSQL |
-| **ORM** | Prisma |
-
----
+<br>
+Frontend: HTML5, CSS3, Vanilla JS <br>
+Backend: Node.js, Express.js <br>
+Database: PostgreSQL <br>
+ORM: Prisma <br>
 
 ## ⚙️ Установка и запуск
+<br>
+1. Клонирование репозитория: `git clone https://github.com/A1zen06/equilibrium.git` <br>
+2. Настройка окружения (.env в папке back): `DATABASE_URL="postgresql://user:password@localhost:5432/equilibrium"` <br>
+3. Запуск: `cd back` -> `npm install` -> `npx prisma db push` -> `npm start`
 
-1. **Клонирование репозитория:**
-```bash
-   git clone [https://github.com/A1zen06/equilibrium.git](https://github.com/A1zen06/equilibrium.git)
-   cd equilibrium
-2. **Настройка окружения:**
-Создайте .env в папке back:
+## 🔑 Ролевая модель доступа
+<br>
+**Владелец (Owner):** `krasnikov@equilibrium.ru` / `8523698741` <br>
+*Возможности: Управление объектами недвижимости, просмотр заявок, аналитика.* <br>
+<br>
+**Арендатор (User):** `RRR@mail.ru` / `12345` <br>
+*Возможности: Поиск жилья, бронирование, история заказов, "Избранное".* <br>
+<br>
+**Гость (Unregistered User):** *Без авторизации* <br>
+*Возможности: Просмотр каталога, фильтрация по локации и гостям.*
 
-## Фрагмент кода
-   DATABASE_URL="postgresql://user:password@localhost:5432/equilibrium"
-   JWT_SECRET="ваш_секрет"
-Запуск:
-
-Bash
-   cd back
-   npm install
-   npx prisma db push
-   npm start
-🔑 Ролевая модель доступа
-В системе предусмотрено три уровня доступа:
-
-Владелец (Owner): krasnikov@equilibrium.ru / password123
-
-Возможности: Полное управление объектами недвижимости, просмотр и обработка заявок от арендаторов, аналитика.
-
-Арендатор (User): client@equilibrium.ru / client123
-
-Возможности: Поиск жилья, подача заявок на бронирование, ведение истории заказов, управление списком "Избранное".
-
-Гость (Unregistered User): Без авторизации
-
-Возможности: Просмотр актуального каталога жилья, использование фильтров по локации и гостям, доступ к детальной информации о любом объекте.
-
-Проект разработан для автоматизации процессов аренды недвижимости.
+---
+*Проект разработан для автоматизации процессов аренды недвижимости.*
