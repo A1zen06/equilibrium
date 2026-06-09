@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const contBookings = document.getElementById('bookings-container');
         const contFavorites = document.getElementById('favorites-container');
 
-        if(btnBookings && btnFavorites) {
+        if (btnBookings && btnFavorites) {
             btnBookings.onclick = () => {
                 btnBookings.classList.add('active'); btnFavorites.classList.remove('active');
                 contBookings.style.display = 'block'; contFavorites.style.display = 'none';
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (authBlock) authBlock.style.display = 'none';
         if (dashboardBlock) dashboardBlock.style.display = 'block';
-        
+
         document.getElementById('welcome-title').innerText = `Добро пожаловать, ${currentUser.name}!`;
         document.getElementById('cabinet-email-info').innerText = `${currentUser.email}`;
 
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('owner-only-zone').style.display = 'block';
             document.getElementById('user-only-zone').style.display = 'none';
             if (cabinetLink) cabinetLink.innerText = 'Панель владельца';
-            
+
             loadOwnerStats(token);
             loadOwnerBookings(token);
             loadPendingReviews(token);
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('owner-only-zone').style.display = 'none';
             document.getElementById('user-only-zone').style.display = 'block';
             if (cabinetLink) cabinetLink.innerText = 'Профиль';
-            
+
             loadMyBookings(token);
             loadMyFavorites(token);
         }
@@ -94,9 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
                 const result = await res.json();
-                if (result.status === 'success') { localStorage.setItem('token', result.token); checkAuth(); } 
+                if (result.status === 'success') { localStorage.setItem('token', result.token); checkAuth(); }
                 else { alert(result.message || 'Ошибка входа'); }
-            } catch(err) { alert('Ошибка сети'); }
+            } catch (err) { alert('Ошибка сети'); }
         };
     }
 
@@ -109,9 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const res = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password }) });
                 const result = await res.json();
-                if (result.status === 'success') { localStorage.setItem('token', result.token); checkAuth(); } 
+                if (result.status === 'success') { localStorage.setItem('token', result.token); checkAuth(); }
                 else { alert(result.message || 'Ошибка регистрации'); }
-            } catch(err) { alert('Ошибка сети'); }
+            } catch (err) { alert('Ошибка сети'); }
         };
     }
 
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const token = localStorage.getItem('token');
             const formData = new FormData();
-            
+
             formData.append('title', document.getElementById('prop-title').value);
             formData.append('address', document.getElementById('prop-address').value);
             formData.append('pricePerDay', document.getElementById('prop-price').value);
@@ -145,19 +145,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.append('amenities', JSON.stringify(amenitiesArray));
             }
 
+            // Добавляем все фото в FormData
             const fileInput = document.getElementById('prop-file');
-            if (fileInput.files.length > 0) formData.append('imageFile', fileInput.files[0]);
+            if (fileInput && fileInput.files.length > 0) {
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    formData.append('imageFiles', fileInput.files[i]);
+                }
+            }
 
+            // Отправляем запрос
             try {
                 const res = await fetch('/api/properties', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: formData });
                 const result = await res.json();
-                if (result.status === 'success') { 
-                    alert('Объект успешно добавлен!'); 
-                    addPropertyForm.reset(); 
+                if (result.status === 'success') {
+                    alert('Объект успешно добавлен!');
+                    addPropertyForm.reset();
                 } else { alert(result.message); }
-            } catch(err) { alert('Ошибка при отправке данных'); }
+            } catch (err) { alert('Ошибка при отправке данных'); }
         };
-    }
+    } // <-- ЗДЕСЬ БЫЛА УТЕРЯНА ВАЖНАЯ СКОБКА
 
     // 4. СТАТУСЫ И ОТОБРАЖЕНИЕ БРОНИРОВАНИЙ
     const statusMap = { PENDING: 'Ожидает', CONFIRMED: 'Подтверждена', CANCELLED: 'Отменена' };
@@ -190,14 +196,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 result.data.forEach(b => {
                     const start = new Date(b.startDate).toLocaleDateString('ru-RU');
                     const end = new Date(b.endDate).toLocaleDateString('ru-RU');
-                    
-                    let actionsHtml = `<button class="action-btn" style="background: var(--bg-card); border: 1px solid var(--accent-gold); color: var(--accent-gold); margin-bottom: 5px;" onclick="window.openChatModal(${b.id}, ${b.property.ownerId})">Открыть чат</button><br>`;
-                    
+
+                    let actionsHtml = `<div class="booking-actions">`;
+                    actionsHtml += `<button class="btn-chat" onclick="window.openChatModal(${b.id}, ${b.property.ownerId})">ОТКРЫТЬ ЧАТ</button>`;
+
                     if (b.status === 'PENDING') {
-                        actionsHtml += `<button class="action-btn btn-reject" onclick="window.updateBookingStatus(${b.id}, 'CANCELLED', 'USER')">Отменить бронь</button>`;
+                        actionsHtml += `<button class="btn-reject" onclick="window.updateBookingStatus(${b.id}, 'CANCELLED', 'USER')">ОТМЕНИТЬ БРОНЬ</button>`;
                     } else if (b.status === 'CONFIRMED') {
-                        actionsHtml += `<button class="action-btn" style="background: var(--accent-gold); color: black;" onclick="window.openReviewModal(${b.propertyId})">Оценить проживание</button>`;
+                        actionsHtml += `<button class="btn-action-gold" onclick="window.openReviewModal(${b.propertyId})">ОЦЕНИТЬ ПРОЖИВАНИЕ</button>`;
                     }
+                    actionsHtml += `</div>`;
 
                     html += `
                         <div class="card-premium" style="padding: 20px; margin-bottom: 15px; border-left: 4px solid var(--accent-gold); display: flex; justify-content: space-between; align-items: center; text-align: left;">
@@ -230,15 +238,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 result.data.forEach(b => {
                     const start = new Date(b.startDate).toLocaleDateString('ru-RU');
                     const end = new Date(b.endDate).toLocaleDateString('ru-RU');
-                    
-                    let actions = `<button class="action-btn" style="background: var(--bg-card); border: 1px solid var(--accent-gold); color: var(--accent-gold); margin-bottom: 5px;" onclick="window.openChatModal(${b.id}, ${b.userId})">Чат с гостем</button><br>`;
-                    
+
+                    let actions = `<div class="booking-actions">`;
+                    actions += `<button class="btn-chat" onclick="window.openChatModal(${b.id}, ${b.userId})">ЧАТ С ГОСТЕМ</button>`;
+
                     if (b.status === 'PENDING') {
                         actions += `
-                            <button class="action-btn btn-approve" onclick="window.updateBookingStatus(${b.id}, 'CONFIRMED', 'OWNER')">Одобрить</button>
-                            <button class="action-btn btn-reject" onclick="window.updateBookingStatus(${b.id}, 'CANCELLED', 'OWNER')">Отклонить</button>
+                            <button class="btn-approve" onclick="window.updateBookingStatus(${b.id}, 'CONFIRMED', 'OWNER')">ОДОБРИТЬ</button>
+                            <button class="btn-reject" onclick="window.updateBookingStatus(${b.id}, 'CANCELLED', 'OWNER')">ОТКЛОНИТЬ</button>
                         `;
                     }
+                    actions += `</div>`;
 
                     html += `
                         <div class="card-premium" style="padding: 20px; margin-bottom: 15px; border-left: 4px solid var(--accent-gold); display: flex; justify-content: space-between; align-items: center;">
@@ -283,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 result.data.forEach(item => {
                     html += `
                         <div class="property-premium-card" style="cursor: pointer;" onclick="window.location.href='property.html?id=${item.id}'">
-                            <div style="height: 180px; overflow: hidden; border-bottom: 1px solid var(--border-color);"><img src="${item.image}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                            <div style="height: 180px; overflow: hidden; border-bottom: 1px solid var(--border-color);"><img src="${item.images}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover;"></div>
                             <div style="padding: 15px;">
                                 <h4 style="font-size: 15px; margin-bottom: 5px;">${item.title}</h4>
                                 <p style="color: var(--text-secondary); font-size: 13px;">${item.address}</p>
@@ -341,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ status })
             });
             const result = await res.json();
-            if (result.status === 'success') { loadPendingReviews(token); } 
+            if (result.status === 'success') { loadPendingReviews(token); }
             else { alert(result.message); }
         } catch (e) { console.error('Ошибка модерации'); }
     };
@@ -442,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const typeClass = isMyMessage ? 'sent' : 'received';
                     const autoClass = msg.isAuto ? 'auto' : '';
                     const autoLabel = msg.isAuto ? `<span class="auto-label">Автоматическое сообщение</span>` : '';
-                    
+
                     container.innerHTML += `
                         <div class="chat-message ${typeClass} ${autoClass}">
                             ${autoLabel}

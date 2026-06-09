@@ -811,3 +811,71 @@ body {
     border: 1px solid rgba(255, 71, 87, 0.3); 
 }
 .btn-reject:hover { background: #ff4757; color: #fff; }
+
+/* Контейнер выстраивает кнопки в ровный ряд */
+.booking-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-end; /* Выравнивание по правому краю карточки */
+  margin-top: 20px;
+}
+
+/* Общий каркас кнопок */
+.booking-actions button {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px; /* Небольшое скругление для строгости */
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: inherit;
+}
+
+/* Твоя кнопка чата (Золотой акцент на темном) */
+.btn-chat {
+  background: transparent;
+  color: #D4AF37; 
+  border: 1px solid #D4AF37;
+}
+.btn-chat:hover {
+  background: rgba(212, 175, 55, 0.1);
+}
+
+/* ОДОБРИТЬ (Платиновый цвет) */
+.btn-approve {
+  background: #E5E4E2;
+  color: #000000;
+  border: 1px solid #E5E4E2;
+}
+.btn-approve:hover {
+  background: #000000;
+  border-color: #000000;
+  color: #ffffff;
+}
+
+/* ОТКЛОНИТЬ (Антрацитовый цвет) */
+.btn-reject {
+  background: transparent;
+  color: #A0A0A0;
+  border: 1px solid #4A4A4A;
+}
+.btn-reject:hover {
+  background: #1A1A1A;
+  color: #FFFFFF;
+  border-color: #666666;
+}
+
+/* Выделенная золотая кнопка (ОЦЕНИТЬ ПРОЖИВАНИЕ) */
+.btn-action-gold {
+  background: #D4AF37;
+  color: #000000;
+  border: 1px solid #D4AF37;
+}
+.btn-action-gold:hover {
+  background: #d3b85f; /* Чуть светлее при наведении */
+  border-color: #d3b85f;
+}

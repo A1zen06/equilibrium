@@ -39,26 +39,36 @@ router.get('/', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-router.post('/', verifyUser, upload.single('imageFile'), async (req, res, next) => {
+router.post('/', verifyUser, upload.array('imageFiles', 10), async (req, res, next) => {
   try {
     if (req.user.role !== 'OWNER') return res.status(403).json({ status: 'error', message: 'Нет прав' });
-    
-    const { 
-      title, description, address, pricePerDay, imageUrl, 
-      category, rooms, maxGuests, distanceToMetro, 
-      latitude, longitude, amenities, rules, depositAmount 
+
+    const {
+      title, description, address, pricePerDay, imageUrl,
+      category, rooms, maxGuests, distanceToMetro,
+      latitude, longitude, amenities, rules, depositAmount
     } = req.body;
-    
-    let finalImage = imageUrl || 'https://images.imagesimages.org/placeholder.jpg';
-    if (req.file) finalImage = '/uploads/' + req.file.filename;
+
+    // Формируем массив фотографий
+    let imageUrls = [];
+    if (req.files && req.files.length > 0) {
+      // Если владелец загрузил реальные файлы, собираем их пути
+      imageUrls = req.files.map(file => '/uploads/' + file.filename);
+    } else if (imageUrl) {
+      // Если файлов нет, но есть текстовая ссылка из поля
+      imageUrls.push(imageUrl);
+    } else {
+      // Если вообще ничего нет, ставим заглушку
+      imageUrls.push('https://images.imagesimages.org/placeholder.jpg');
+    }
 
     const newProp = await prisma.property.create({
-      data: { 
-        title, 
-        description, 
-        address, 
-        pricePerDay: Number(pricePerDay), 
-        image: finalImage,
+      data: {
+        title,
+        description,
+        address,
+        pricePerDay: Number(pricePerDay),
+        images: imageUrls, // <--- СТРОГО "images" во множественном числе!
         category: category || 'Апартаменты',
         rooms: Number(rooms) || 1,
         maxGuests: Number(maxGuests) || 2,
@@ -68,7 +78,7 @@ router.post('/', verifyUser, upload.single('imageFile'), async (req, res, next) 
         amenities: amenities ? JSON.parse(amenities) : [],
         rules,
         depositAmount: Number(depositAmount) || 0,
-        ownerId: req.user.id 
+        ownerId: req.user.id
       }
     });
     res.status(201).json({ status: 'success', data: newProp });
@@ -110,7 +120,7 @@ router.get('/owner/pending-reviews', verifyUser, async (req, res, next) => {
 router.patch('/reviews/:reviewId/status', verifyUser, async (req, res, next) => {
   try {
     if (req.user.role !== 'OWNER') return res.status(403).json({ status: 'error', message: 'Нет прав' });
-    const { status } = req.body; 
+    const { status } = req.body;
 
     const review = await prisma.review.findUnique({ where: { id: Number(req.params.reviewId) }, include: { property: true } });
     if (!review) return res.status(404).json({ status: 'error', message: 'Отзыв не найден' });
@@ -169,7 +179,7 @@ router.post('/:id/reviews', verifyUser, async (req, res, next) => {
     await prisma.review.create({
       data: { rating: Number(rating), comment: String(comment), status: 'PENDING', propertyId, userId: req.user.id }
     });
-    
+
     res.status(201).json({ status: 'success', message: 'Отзыв отправлен на модерацию владельцу' });
   } catch (error) { next(error); }
 });

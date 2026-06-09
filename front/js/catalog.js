@@ -5,12 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function syncHeader() {
         const token = localStorage.getItem('token');
         const link = document.getElementById('main-cabinet-link');
-        
+
         if (token) {
             try {
                 const user = JSON.parse(atob(token.split('.')[1]));
                 if (link) link.innerText = user.role === 'OWNER' ? 'Панель владельца' : 'Профиль';
-            } catch(e) { localStorage.clear(); }
+            } catch (e) { localStorage.clear(); }
         }
     }
     syncHeader();
@@ -21,14 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const base64Url = token.split('.')[1];
             return JSON.parse(atob(base64Url.replace(/-/g, '+').replace(/_/g, '/'))).role || 'GUEST';
-        } catch(e) { return 'GUEST'; }
+        } catch (e) { return 'GUEST'; }
     }
-    
+
     const currentRole = getUserRole();
     const token = localStorage.getItem('token');
 
     async function loadProperties(queryString = '') {
-        if (!container) return; 
+        if (!container) return;
         container.innerHTML = '<div class="loading-placeholder">Синхронизация с базой данных...</div>';
 
         let userFavorites = new Set();
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const favRes = await fetch('/api/properties/my/favorites', { headers: { 'Authorization': `Bearer ${token}` } });
                 const favData = await favRes.json();
                 if (favData.status === 'success') favData.data.forEach(p => userFavorites.add(p.id));
-            } catch(e) {}
+            } catch (e) { }
         }
 
         try {
@@ -61,23 +61,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     let favHtml = '';
 
                     if (currentRole === 'OWNER') {
-                        actionButtonHtml = `<button class="delete-prop-btn" data-id="${item.id}" style="position: absolute; top: 15px; right: 15px; background: #ff4a4a; color: white; border: none; padding: 8px 14px; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; z-index: 100; transition: all 0.2s ease;">Удалить</button>`;
-                    } else {
-                        const isFav = userFavorites.has(item.id);
-                        favHtml = `<button class="fav-btn ${isFav ? 'active' : ''}" data-id="${item.id}" title="В избранное">${isFav ? '&#9829;' : '&#9825;'}</button>`;
-                        actionButtonHtml = `<button class="book-prop-btn" style="position: absolute; top: 15px; right: 15px; background: var(--accent-gold); color: black; border: none; padding: 8px 14px; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; z-index: 100; transition: all 0.2s ease;">Подробнее</button>`;
-                    }
+                        actionButtonHtml = `<button class="delete-prop-btn" data-id="${item.id}" style="position: absolute; top: 15px; right: 15px; background: #ffc444ff; color: black; border: none; padding: 8px 14px; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; z-index: 100; transition: all 0.2s ease;">Удалить</button>`;
+                    } 
+                    // Сначала вытаскиваем первую картинку из массива (если массива нет — ставим заглушку)
+                    const firstImg = (item.images && item.images.length > 0) ? item.images[0] : 'https://images.imagesimages.org/placeholder.jpg';
 
+                    // Теперь вставляем ее в карточку
                     card.innerHTML = `
-                        ${actionButtonHtml}
-                        ${favHtml}
-                        <div class="property-card-image-wrapper" style="height: 220px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border-color);">${item.image ? `<img src="${item.image}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">` : ''}</div>
-                        <div class="property-card-body">
-                            <h3 class="property-card-title">${item.title}</h3>
-                            <p style="color: var(--text-secondary); font-size: 14px;">${item.address}</p>
-                            <div class="property-card-price">${item.pricePerDay.toLocaleString()} ₽ / сутки</div>
-                        </div>
-                    `;
+    ${actionButtonHtml}
+    ${favHtml}
+    <div class="property-card-image-wrapper" style="height: 220px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border-color);">
+        <img src="${firstImg}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
+    </div>
+    <div class="property-card-body">
+        <h3 class="property-card-title">${item.title}</h3>
+        <p style="color: var(--text-secondary); font-size: 14px;">${item.address}</p>
+        <div class="property-card-price">${item.pricePerDay.toLocaleString()} ₽ / сутки</div>
+    </div>
+`;
 
                     if (currentRole !== 'OWNER') {
                         const favBtn = card.querySelector('.fav-btn');
@@ -98,13 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                     if (result.status === 'success') {
                                         if (result.action === 'added') {
                                             favBtn.classList.add('active');
-                                            favBtn.innerHTML = '&#9829;'; 
+                                            favBtn.innerHTML = '&#9829;';
                                         } else {
                                             favBtn.classList.remove('active');
-                                            favBtn.innerHTML = '&#9825;'; 
+                                            favBtn.innerHTML = '&#9825;';
                                         }
                                     }
-                                } catch(err) { console.error(err); }
+                                } catch (err) { console.error(err); }
                             };
                         }
                     }
@@ -115,14 +116,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (currentRole === 'OWNER') {
                     document.querySelectorAll('.delete-prop-btn').forEach(button => {
                         button.onclick = async (e) => {
-                            e.stopPropagation(); 
+                            e.stopPropagation();
                             const id = button.getAttribute('data-id');
                             if (confirm('Вы уверены, что хотите навсегда удалить это объявление из базы данных?')) {
                                 const res = await fetch(`/api/properties/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
                                 const delResult = await res.json();
                                 if (delResult.status === 'success') {
                                     alert(delResult.message);
-                                    loadProperties(); 
+                                    loadProperties();
                                 } else { alert(delResult.message); }
                             }
                         };

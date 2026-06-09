@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
     <header class="navbar">
@@ -21,65 +23,101 @@
 
     <main class="main-content">
         <div id="property-details-wrapper" style="display: none; animation: fadeInUp 0.6s ease-out forwards;">
-            
+
             <div style="margin-bottom: 30px;">
-                <h1 id="prop-detail-title" style="font-weight: 300; font-size: 36px; letter-spacing: 1px; margin-bottom: 10px;">Загрузка названия...</h1>
+                <h1 id="prop-detail-title"
+                    style="font-weight: 300; font-size: 36px; letter-spacing: 1px; margin-bottom: 10px;">Загрузка
+                    названия...</h1>
                 <p id="prop-detail-address" style="color: var(--text-secondary); font-size: 16px;"></p>
             </div>
 
-            <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+            <div class="main-image-slider-wrapper"
+                style="position: relative; width: 100%; height: 450px; overflow: hidden; border-radius: 12px; border: 1px solid var(--border-color);">
+
                 
-                <div style="flex: 2; min-width: 300px;">
-                    <div id="prop-detail-image-box" style="width: 100%; height: 450px; border-radius: var(--radius-premium); overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 30px;">
-                        <img id="prop-detail-img" src="" alt="" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
+                <button id="gallery-prev-btn"
+                    style="position: absolute; top: 50%; left: 15px; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: var(--accent-gold); border: 1px solid var(--accent-gold); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s ease; padding: 0;"
+                    onmouseover="this.style.background='var(--accent-gold)'; this.querySelector('.arrow-icon').style.borderColor='black';"
+                    onmouseout="this.style.background='rgba(0,0,0,0.6)'; this.querySelector('.arrow-icon').style.borderColor='var(--accent-gold)';">
+                    
+                    <span class="arrow-icon"
+                        style="display: block; width: 10px; height: 10px; border-left: 2px solid var(--accent-gold); border-bottom: 2px solid var(--accent-gold); transform: rotate(45deg); margin-left: 4px; transition: border-color 0.2s;"></span>
+                </button>
 
-                    <div class="card-premium" style="padding: 30px;">
-                        <h3 style="color: var(--accent-gold); font-weight: 400; margin-bottom: 15px; text-transform: uppercase; font-size: 16px; letter-spacing: 1px;">Описание пространства</h3>
-                        <p id="prop-detail-desc" style="color: var(--text-secondary); font-size: 15px; line-height: 1.7; white-space: pre-line;">Описание апартаментов...</p>
-                    </div>
+                
+                <img id="prop-detail-img" src="https://images.imagesimages.org/placeholder.jpg" alt="EQUILIBRIUM"
+                    style="width: 100%; height: 100%; object-fit: cover;">
 
-                    <div class="card-premium" style="padding: 30px;">
-                        <h3 style="color: var(--accent-gold); font-weight: 400; margin-bottom: 15px; text-transform: uppercase; font-size: 16px; letter-spacing: 1px;">Характеристики и Удобства</h3>
-                        <div id="prop-detail-specs" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; font-size: 14px; color: var(--text-secondary);">
-                        </div>
-                    </div>
+                
+                <button id="gallery-next-btn"
+                    style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: var(--accent-gold); border: 1px solid var(--accent-gold); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s ease; padding: 0;"
+                    onmouseover="this.style.background='var(--accent-gold)'; this.querySelector('.arrow-icon').style.borderColor='black';"
+                    onmouseout="this.style.background='rgba(0,0,0,0.6)'; this.querySelector('.arrow-icon').style.borderColor='var(--accent-gold)';">
+                   
+                    <span class="arrow-icon"
+                        style="display: block; width: 10px; height: 10px; border-right: 2px solid var(--accent-gold); border-top: 2px solid var(--accent-gold); transform: rotate(45deg); margin-right: 4px; transition: border-color 0.2s;"></span>
+                </button>
+
+            </div>
+
+            <div class="card-premium" style="padding: 30px;">
+                <h3
+                    style="color: var(--accent-gold); font-weight: 400; margin-bottom: 15px; text-transform: uppercase; font-size: 16px; letter-spacing: 1px;">
+                    Описание пространства</h3>
+                <p id="prop-detail-desc"
+                    style="color: var(--text-secondary); font-size: 15px; line-height: 1.7; white-space: pre-line;">
+                    Описание апартаментов...</p>
+            </div>
+
+            <div class="card-premium" style="padding: 30px;">
+                <h3
+                    style="color: var(--accent-gold); font-weight: 400; margin-bottom: 15px; text-transform: uppercase; font-size: 16px; letter-spacing: 1px;">
+                    Характеристики и Удобства</h3>
+                <div id="prop-detail-specs"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; font-size: 14px; color: var(--text-secondary);">
+                </div>
+            </div>
+        </div>
+
+        <div style="flex: 1; min-width: 300px; height: fit-content; position: sticky; top: 120px;">
+            <div class="card-premium" style="padding: 30px; border: 1px solid var(--border-color);">
+                <div style="margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+                    <span style="color: var(--text-secondary); font-size: 14px;">Цена за сутки</span>
+                    <h2 id="prop-detail-price"
+                        style="color: var(--accent-gold); font-weight: 600; font-size: 28px; margin-top: 5px;">0 ₽
+                    </h2>
                 </div>
 
-                <div style="flex: 1; min-width: 300px; height: fit-content; position: sticky; top: 120px;">
-                    <div class="card-premium" style="padding: 30px; border: 1px solid var(--border-color);">
-                        <div style="margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
-                            <span style="color: var(--text-secondary); font-size: 14px;">Цена за сутки</span>
-                            <h2 id="prop-detail-price" style="color: var(--accent-gold); font-weight: 600; font-size: 28px; margin-top: 5px;">0 ₽</h2>
-                        </div>
-
-                        <form id="detail-booking-form">
-                            <div class="form-group">
-                                <label class="form-label">Дата заезда</label>
-                                <input type="date" id="detail-start-date" class="form-input" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Дата выезда</label>
-                                <input type="date" id="detail-end-date" class="form-input" required>
-                            </div>
-
-                            <div class="price-summary" style="margin: 20px 0; background-color: var(--bg-input);">
-                                <span style="font-size: 14px; color: var(--text-secondary);">Итоговый расчет:</span>
-                                <strong id="detail-total-calc" style="font-size: 18px; color: var(--text-primary);">0 ₽</strong>
-                            </div>
-
-                            <button type="submit" class="btn-gold" style="font-size: 13px;">Забронировать сейчас</button>
-                        </form>
+                <form id="detail-booking-form">
+                    <div class="form-group">
+                        <label class="form-label">Дата заезда</label>
+                        <input type="date" id="detail-start-date" class="form-input" required>
                     </div>
-                </div>
-
-            </div> 
-
-            <section class="reviews-section">
-                <h3 style="font-weight: 300; font-size: 24px; letter-spacing: 1px; text-transform: uppercase; border-left: 3px solid var(--accent-gold); padding-left: 15px;">Отзывы резидентов</h3>
-                <div id="reviews-container" class="reviews-grid">
+                    <div class="form-group">
+                        <label class="form-label">Дата выезда</label>
+                        <input type="date" id="detail-end-date" class="form-input" required>
                     </div>
-            </section>
+
+                    <div class="price-summary" style="margin: 20px 0; background-color: var(--bg-input);">
+                        <span style="font-size: 14px; color: var(--text-secondary);">Итоговый расчет:</span>
+                        <strong id="detail-total-calc" style="font-size: 18px; color: var(--text-primary);">0
+                            ₽</strong>
+                    </div>
+
+                    <button type="submit" class="btn-gold" style="font-size: 13px;">Забронировать сейчас</button>
+                </form>
+            </div>
+        </div>
+
+        </div>
+
+        <section class="reviews-section">
+            <h3
+                style="font-weight: 300; font-size: 24px; letter-spacing: 1px; text-transform: uppercase; border-left: 3px solid var(--accent-gold); padding-left: 15px;">
+                Отзывы резидентов</h3>
+            <div id="reviews-container" class="reviews-grid">
+            </div>
+        </section>
 
         </div>
 
@@ -106,4 +144,5 @@
 
     <script src="../js/property.js"></script>
 </body>
+
 </html>
