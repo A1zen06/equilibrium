@@ -14,7 +14,7 @@ ORM: Prisma <br>
 ## ⚙️ Установка и запуск
 <br>
 1. Клонирование репозитория: `git clone https://github.com/A1zen06/equilibrium.git` <br>
-2. Настройка окружения (.env в папке back): `DATABASE_URL="postgresql://user:12345@localhost:5432/equilibrium"` <br>
+2. Настройка окружения (.env в папке back): `DATABASE_URL="postgresql://ИМЯ_ПОЛЬЗОВАТЕЛЯ:ТВОЙ_ПАРОЛЬ@localhost:5432/equilibrium""` <br>
 3. Запуск: `cd back` -> `npm install` -> `npx prisma db push` -> `npm start`
 
 ## 🔑 Ролевая модель доступа
