@@ -14,15 +14,15 @@ ORM: Prisma <br>
 ## ⚙️ Установка и запуск
 <br>
 1. Клонирование репозитория: `git clone https://github.com/A1zen06/equilibrium.git` <br>
-2. Настройка окружения (.env в папке back): `DATABASE_URL="postgresql://ИМЯ_ПОЛЬЗОВАТЕЛЯ:ТВОЙ_ПАРОЛЬ@localhost:5432/equilibrium""` <br>
+2. Для запуска проекта создайте файл .env в корне бэкенда и укажите в нем свои собственные данные для подключения к БД, используя .env.example как шаблон <br>
 3. Запуск: `cd back` -> `npm install` -> `npx prisma db push` -> `npm start`
 
 ## 🔑 Ролевая модель доступа
 <br>
-**Владелец (Owner):** `krasnikov@equilibrium.ru` / `8523698741` <br>
+**Владелец (Owner):** `krasnikov@equilibrium.ru`<br>
 *Возможности: Управление объектами недвижимости, просмотр заявок, аналитика.* <br>
 <br>
-**Арендатор (User):** `RRR@mail.ru` / `12345` <br>
+**Арендатор (User):**<br>
 *Возможности: Поиск жилья, бронирование, история заказов, "Избранное".* <br>
 <br>
 **Гость (Unregistered User):** *Без авторизации* <br>
