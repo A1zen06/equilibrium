@@ -59,32 +59,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     let actionButtonHtml = '';
                     let favHtml = '';
-
-                    if (currentRole === 'OWNER') {
-                        actionButtonHtml = `<button class="delete-prop-btn" data-id="${item.id}" style="position: absolute; top: 15px; right: 15px; background: #ffc444ff; color: black; border: none; padding: 8px 14px; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; z-index: 100; transition: all 0.2s ease;">Удалить</button>`;
-                    } 
-                    // Сначала вытаскиваем первую картинку из массива (если массива нет — ставим заглушку)
+                    
+                    // Проверяем, есть ли картинка. Если нет - ставим заглушку
                     const firstImg = (item.images && item.images.length > 0) ? item.images[0] : 'https://images.imagesimages.org/placeholder.jpg';
 
-                    // Теперь вставляем ее в карточку
-                    card.innerHTML = `
-    ${actionButtonHtml}
-    ${favHtml}
-    <div class="property-card-image-wrapper" style="height: 220px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border-color);">
-        <img src="${firstImg}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
-    </div>
-    <div class="property-card-body">
-        <h3 class="property-card-title">${item.title}</h3>
-        <p style="color: var(--text-secondary); font-size: 14px;">${item.address}</p>
-        <div class="property-card-price">${item.pricePerDay.toLocaleString()} ₽ / сутки</div>
-    </div>
-`;
+                    if (currentRole === 'OWNER') {
+                        // Кнопка удаления для владельца
+                        actionButtonHtml = `<button class="delete-prop-btn" data-id="${item.id}" style="position: absolute; top: 15px; right: 15px; background: #ffc444ff; color: black; border: none; padding: 8px 14px; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; z-index: 100; transition: all 0.2s ease;">Удалить</button>`;
+                    } else {
+                        // Кнопка "В избранное" (Темное стекло + золотая рамка)
+                        const isFavorited = userFavorites.has(item.id);
+                        const heartIcon = isFavorited ? '💛' : '🤍';
+                        const activeClass = isFavorited ? 'active' : '';
 
+                        favHtml = `
+                        <div class="fav-btn ${activeClass}" style="
+                            position: absolute; 
+                            top: 15px; 
+                            right: 15px; 
+                            z-index: 100; 
+                            width: 36px;
+                            height: 36px;
+                            background: rgba(20, 20, 20, 0.65);
+                            backdrop-filter: blur(4px);
+                            -webkit-backdrop-filter: blur(4px);
+                            border: 1px solid rgba(255, 196, 68, 0.3);
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 16px;
+                            cursor: pointer;
+                            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+                            transition: all 0.2s ease;
+                        " onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
+                            ${heartIcon}
+                        </div>`;
+                    }
+
+                    // Единый чистый HTML блок для карточки
+                    card.innerHTML = `
+                        <div style="position: relative; width: 100%; height: 100%;">
+                            ${actionButtonHtml}
+                            ${favHtml}
+
+                            <div class="property-card-image-wrapper" style="height: 220px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border-color);">
+                                <img src="${firstImg}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
+                            </div>
+                            
+                            <div class="property-card-body">
+                                <h3 class="property-card-title">${item.title}</h3>
+                                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 10px;">${item.address}</p>
+                                <div class="property-card-price" style="margin: 0;">${item.pricePerDay.toLocaleString()} ₽ / сутки</div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Логика клика по сердечку (только для НЕ владельцев)
                     if (currentRole !== 'OWNER') {
                         const favBtn = card.querySelector('.fav-btn');
                         if (favBtn) {
                             favBtn.onclick = async (e) => {
-                                e.stopPropagation();
+                                e.stopPropagation(); 
                                 if (!token) {
                                     alert('Для сохранения в избранное необходимо войти в систему.');
                                     window.location.href = 'html/login.html';
@@ -96,16 +132,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                         headers: { 'Authorization': `Bearer ${token}` }
                                     });
                                     const result = await res.json();
+                                    
                                     if (result.status === 'success') {
                                         if (result.action === 'added') {
                                             favBtn.classList.add('active');
-                                            favBtn.innerHTML = '&#9829;';
+                                            favBtn.innerHTML = '💛';
                                         } else {
                                             favBtn.classList.remove('active');
-                                            favBtn.innerHTML = '&#9825;';
+                                            favBtn.innerHTML = '🤍';
                                         }
                                     }
-                                } catch (err) { console.error(err); }
+                                } catch (err) { console.error('Ошибка добавления в избранное:', err); }
                             };
                         }
                     }
@@ -113,27 +150,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     container.appendChild(card);
                 });
 
+                // Логика кнопки удаления (только для Владельцев)
                 if (currentRole === 'OWNER') {
                     document.querySelectorAll('.delete-prop-btn').forEach(button => {
                         button.onclick = async (e) => {
                             e.stopPropagation();
                             const id = button.getAttribute('data-id');
                             if (confirm('Вы уверены, что хотите навсегда удалить это объявление из базы данных?')) {
-                                const res = await fetch(`/api/properties/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
-                                const delResult = await res.json();
-                                if (delResult.status === 'success') {
-                                    alert(delResult.message);
-                                    loadProperties();
-                                } else { alert(delResult.message); }
+                                try {
+                                    const res = await fetch(`/api/properties/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+                                    const delResult = await res.json();
+                                    if (delResult.status === 'success') {
+                                        alert(delResult.message);
+                                        loadProperties(); 
+                                    } else { 
+                                        alert(delResult.message); 
+                                    }
+                                } catch(err) { console.error('Ошибка удаления:', err); }
                             }
                         };
                     });
                 }
+
             } else {
                 container.innerHTML = '<div class="loading-placeholder">По вашему запросу ничего не найдено. Попробуйте изменить параметры поиска.</div>';
             }
         } catch (error) {
             container.innerHTML = '<div class="loading-placeholder" style="color: #ff4a4a;">Ошибка загрузки данных от сервера БД.</div>';
+            console.error('Ошибка загрузки объявлений:', error);
         }
     }
 
@@ -145,8 +189,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const locationVal = document.getElementById('search-location').value.trim();
             const guestsVal = document.getElementById('search-guests').value;
             const params = new URLSearchParams();
+            
             if (locationVal) params.append('location', locationVal);
             if (guestsVal) params.append('guests', guestsVal);
+            
             loadProperties(params.toString() ? `?${params.toString()}` : '');
             document.getElementById('properties-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
         });

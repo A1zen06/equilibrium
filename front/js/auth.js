@@ -291,9 +291,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.status === 'success' && result.data.length > 0) {
                 let html = '<div class="catalog-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; text-align: left;">';
                 result.data.forEach(item => {
+                    // Берем ПЕРВОЕ фото из массива. Если массива нет - ставим заглушку.
+                    const firstImg = (item.images && item.images.length > 0) ? item.images[0] : 'https://images.imagesimages.org/placeholder.jpg';
+
                     html += `
                         <div class="property-premium-card" style="cursor: pointer;" onclick="window.location.href='property.html?id=${item.id}'">
-                            <div style="height: 180px; overflow: hidden; border-bottom: 1px solid var(--border-color);"><img src="${item.images}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                            <div style="height: 180px; overflow: hidden; border-bottom: 1px solid var(--border-color);">
+                                <img src="${firstImg}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
                             <div style="padding: 15px;">
                                 <h4 style="font-size: 15px; margin-bottom: 5px;">${item.title}</h4>
                                 <p style="color: var(--text-secondary); font-size: 13px;">${item.address}</p>

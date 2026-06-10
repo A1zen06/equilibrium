@@ -157,6 +157,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             `Премиальные клубные апартаменты в комплексе EQUILIBRIUM. Полностью укомплектованы дизайнерской мебелью, бытовой техникой экстра-класса и готовы к комфортному посуточному проживанию.`;
 
         // Формируем список характеристик в столбик, скрывая пустые поля
+        // --- БЛОК ХАРАКТЕРИСТИК, УДОБСТВ И УСЛОВИЙ ---
         let specsHtml = '';
 
         if (property.category) {
@@ -168,21 +169,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (property.maxGuests) {
             specsHtml += `<div style="display: block; margin-bottom: 10px;">✦ Макс. гостей: <strong>${property.maxGuests}</strong></div>`;
         }
-        // Если метро нет, или строка пустая, или там написано "Не указано" — пропускаем
         if (property.distanceToMetro && property.distanceToMetro.trim() !== '' && property.distanceToMetro !== 'Не указано') {
             specsHtml += `<div style="display: block; margin-bottom: 10px;">✦ Метро: <strong>${property.distanceToMetro}</strong></div>`;
         }
-        // Если залог есть и он больше нуля — выводим, иначе скрываем строку совсем
         if (property.depositAmount && Number(property.depositAmount) > 0) {
             specsHtml += `<div style="display: block; margin-bottom: 10px;">✦ Залог: <strong>${property.depositAmount} ₽</strong></div>`;
         }
 
+        // 1. Выводим Удобства (amenities), если они есть в массиве
+        if (property.amenities && property.amenities.length > 0) {
+            specsHtml += `<div style="display: block; margin-top: 20px; margin-bottom: 5px; color: var(--accent-gold); font-weight: bold;">✦ Удобства:</div>`;
+            property.amenities.forEach(item => {
+                specsHtml += `<div style="display: block; margin-left: 15px; margin-bottom: 5px; font-size: 14px; color: var(--text-secondary);">&bull; ${item}</div>`;
+            });
+        }
+
+        // 2. Выводим Условия проживания / Правила (rules), если строка не пустая
+        if (property.rules && property.rules.trim() !== '') {
+            specsHtml += `<div style="display: block; margin-top: 20px; margin-bottom: 5px; color: var(--accent-gold); font-weight: bold;">✦ Правила проживания:</div>`;
+            specsHtml += `<div style="display: block; margin-left: 15px; font-size: 14px; color: var(--text-secondary); line-height: 1.4;">${property.rules}</div>`;
+        }
+
+        // Принудительно сбрасываем flex-контейнер в блочный столбик и вставляем HTML
         const specsContainer = document.getElementById('prop-detail-specs');
         if (specsContainer) {
-            // Принудительно отключаем flex и переводим контейнер в обычный блочный режим (в столбик)
-            specsContainer.style.display = 'block';
+            specsContainer.style.display = 'block'; 
             specsContainer.innerHTML = specsHtml;
         }
+        // --------------------------------------------------
 
         if (detailsWrapper) detailsWrapper.style.display = 'block';
 
